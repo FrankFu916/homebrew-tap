@@ -7,6 +7,10 @@ class Highwater < Formula
 
   depends_on "node" => ">=22.5.0"
 
+  # Note: Homebrew applies a --min-release-age cooldown (currently 1 day) to npm
+  # installs as a supply-chain protection. Freshly published versions become
+  # installable via brew after that window; `npm i -g highwater` works instantly.
+
   def install
     system "npm", "install", *std_npm_args
     bin.install_symlink libexec.glob("bin/highwater")
@@ -14,6 +18,6 @@ class Highwater < Formula
 
   test do
     assert_match "know when your data stops flowing", shell_output("#{bin}/highwater --help")
-    assert_match "0.1.0", shell_output("#{bin}/highwater version")
+    assert_match version.to_s, shell_output("#{bin}/highwater version")
   end
 end
